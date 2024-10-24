@@ -1,5 +1,0 @@
-cat art_of_war.txt | ./splt | sort | uniq
-cat art_of_war.txt | ./splt | sort | uniq >lexicon.txt
-cat art_of_war.txt | ./splt | sort | uniq | head -n 1
-cat art_of_war.txt | ./splt | sort | uniq | tail -n 1
-cat art_of_war.txt | ./splt | sort | uniq | sed -n '9998p'

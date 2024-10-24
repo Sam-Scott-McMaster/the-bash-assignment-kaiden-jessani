@@ -1,5 +1,0 @@
-In Lab 1.1, I have learned how to create files using Linux, how to create and execute a simple stript file, and I learned some basic Linux file system commands.
-
-One thing I am excited about is learning C. I have always found learning new computing languages to be fun, and I hope I have the same experience with C.
-
-One thing I am worried about is learning how to use Git and Github. When I have tried to learn it, it has often been on the fly while following YouTube tutorials combined with trial and error, and I have found it very confusing. I am hoping it is not as confusing as I have found it to be in the past.
