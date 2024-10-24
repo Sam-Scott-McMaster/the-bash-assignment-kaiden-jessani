@@ -36,10 +36,10 @@ then
     echo "bn <year> <assigned gender: f|F|m|M|b|B>">&2
     exit 2
 fi
-list_male=$(cat 2XC3-data/us_baby_names/yob$1.txt | grep ",M")
-total_male=$(cat 2XC3-data/us_baby_names/yob$1.txt | grep ",M" | wc -l)
-list_female=$(cat 2XC3-data/us_baby_names/yob$1.txt | grep ",F")
-total_female=$(cat 2XC3-data/us_baby_names/yob$1.txt | grep ",F" | wc -l)
+list_male=$(cat 2XC3-data-1/us_baby_names/yob$1.txt | grep ",M")
+total_male=$(cat 2XC3-data-1/us_baby_names/yob$1.txt | grep ",M" | wc -l)
+list_female=$(cat 2XC3-data-1/us_baby_names/yob$1.txt | grep ",F")
+total_female=$(cat 2XC3-data-1/us_baby_names/yob$1.txt | grep ",F" | wc -l)
 
 if [[ -z $list_male && -z $list_female ]]
 then
