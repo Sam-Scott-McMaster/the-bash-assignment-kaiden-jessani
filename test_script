@@ -113,5 +113,4 @@ test './bn 2022 b' 0 'Frank' '2022: Frank not found among female names.
 2022: Frank ranked 439 out of 14255 male names.' ''
 
 # return code
-echo $fails
 exit $fails
