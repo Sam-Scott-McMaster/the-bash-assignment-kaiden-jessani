@@ -38,6 +38,7 @@ test() {
     local STDOUT=$4
     local STDERR=$5
 
+
     # CHECK RETURN VALUE
     $COMMAND <<< "$STDIN" >/dev/null 2>/dev/null
     local A_RETURN=$?
@@ -88,8 +89,8 @@ test() {
 test './bn 2022 m' 0 'Sam' '2022: Sam ranked 658 out of 14255 male names.' ''
 
 # multi line success
-test './bn 2022 B' 0 'Sam' '2022: Sam ranked 658 out of 14255 male names.
-2022: Sam ranked 6628 out of 17660 female names.' ''
+test './bn 2022 B' 0 'Sam' '2022: Sam ranked 6628 out of 17660 female names.
+2022: Sam ranked 658 out of 14255 male names.' ''
 
 # error case
 test './bn 2022 F' 3 'Sam2' '' 'Badly formatted name: Sam2'  
@@ -97,6 +98,19 @@ test './bn 2022 F' 3 'Sam2' '' 'Badly formatted name: Sam2'
 # multi line error case #2
 test './bn 1111 X' 2 '' '' 'Badly formatted assigned gender: X
 bn <year> <assigned gender: f|F|m|M|b|B>'
+
+# error case
+test './bn 2022' 1 'Sam2' '' 'bn <year> <assigned gender f|F|m|M|b|B>' ''
+
+# simple success
+test './bn 1969 f' 0 'Sara' '1969: Sara ranked 124 out of 8708 female names.' ''
+
+# simple failure of finding name
+test './bn 2022 M' 0 'rank' '2022: rank not found among male names.' ''
+
+# one-line success, one-line failure
+test './bn 2022 b' 0 'Frank' '2022: Frank not found among female names.
+2022: Frank ranked 439 out of 14255 male names.' ''
 
 # return code
 exit $fails
