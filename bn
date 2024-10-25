@@ -1,20 +1,21 @@
 #!/bin/bash
 
-if [[ $1 == "--help" ]]
+if [[ $1 == "--help" ]] #call on help method if needed
 then
     help
-
-elif [[ $# -ne 2 ]]
+fi
+if [[ $# -ne 2 ]] #check number of arguments, and if it is not the right number of arguments, print out the format of the code, and return exit 1
 then
 	echo "bn <year> <assigned gender f|F|m|M|b|B>">&2
 	exit 1
 
 fi
 
+#This function prints out the help function. 
 help()
 {
-    echo "Baby Names Utility - Version 1.0"
-    echo "This utility allows users to search for the rankings of baby names."
+    echo "Baby Names Utility - Version 1.0" 
+    echo "This utility allows users to search for the rankings of baby names by year for both male and female names."
     echo
     echo "Usage:"
     echo "  bn <year> <assigned gender: f|F|m|M|b|B>"
@@ -30,29 +31,45 @@ help()
 }
 
 
-if [[ ! $2 =~ ^[bBmMfF]+$ ]]
+if [[ ! $2 =~ ^[bBmMfF]+$ ]] #check if the gender is a valid option, and if it isn't, exit with code 2
 then
     echo "Badly formatted assigned gender: $2">&2
     echo "bn <year> <assigned gender: f|F|m|M|b|B>">&2
     exit 2
 fi
+
+#these 4 statements store the whole list of baby names for the corresponding year, and also store the number of names for each gender for that year
 list_male=$(cat 2XC3-data-1/us_baby_names/yob$1.txt | grep ",M")
 total_male=$(cat 2XC3-data-1/us_baby_names/yob$1.txt | grep ",M" | wc -l)
 list_female=$(cat 2XC3-data-1/us_baby_names/yob$1.txt | grep ",F")
 total_female=$(cat 2XC3-data-1/us_baby_names/yob$1.txt | grep ",F" | wc -l)
 
-if [[ -z $list_male && -z $list_female ]]
-then
-	echo "No data for $1"
-fi
 
+year=$2 #store the year in a variable for the vailidity method
+
+
+#this method checks if the year is valid, and print out if there is data for the year provided
+validity()
+{
+    if [[ ! "$1" =~ ^[a-zA-Z]+$ ]] #make sure the word is valid
+        then
+            echo "Badly formatted name: $1" >&2
+            exit 3
+        fi
+    if [[ -z $list_male && -z $list_female ]]
+    then
+        echo "No data for $year"
+        exit 5
+    fi
+}
+
+#These variables are for the rank method, this allows for the highest value to be stored, which allows the user to call on this method whenever they want to see the highest ranking name. 
 highest_rank_male=$total_male
 highest_rank_female=$total_female
-
 highest_name_male=""
 highest_name_female=""
 
-gender=$2
+gender=$2 #store the gender for the rank method
 
 rank()
 {
@@ -65,17 +82,14 @@ rank()
         echo "Highest ranking spot for female names: $highest_rank_female, for the name $highest_name_female"
     fi
 }
-
 while read line; do
-    IFS=' ' read -r -a words <<< "$line"
-    for word in "${words[@]}"; do
-        if [[ ! "$word" =~ ^[a-zA-Z]+$ ]]
-        then
-            echo "Badly formatted name: $word" >&2
-            exit 3
-        fi
-        number_male=$(echo "$list_male" | grep -ni "^$word," | cut -d: -f1)
+    IFS=' ' read -r -a words <<< "$line" # Split the line into an array of words using space as a delimiter
+    for word in "${words[@]}"; do #go through each word in the array
+        validity $word #check if the word is valid
+        number_male=$(echo "$list_male" | grep -ni "^$word," | cut -d: -f1) #store the line number of the baby name into a variable
         number_female=$(echo "$list_female" | grep -ni "^$word," | cut -d: -f1)
+        
+        #These if-else statements set the new highest ranking variable for the rank function
         if [[ $highest_rank_male -gt $number_male && $number_male =~ ^[1-9] ]]
         then
             highest_rank_male=$number_male
@@ -86,6 +100,8 @@ while read line; do
             highest_rank_female=$number_female
             highest_name_female=$word
         fi
+
+        #These if-else statements check the function if the gender provided was a female, male, or both, and prints out the corresponding statements
         if [[ -z "$number_male" &&  $2 =~ [mMbB] ]]
         then
             echo "$1: $word not found among male names."
